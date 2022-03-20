@@ -9,8 +9,10 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-#from QtCore import QCloseEvent
 from package import world_generator
+from grid_code import Ui_GridWindow
+
+import os, sys
 
 h = world_generator.haut
 l = world_generator.larg
@@ -22,10 +24,10 @@ class Ui_MainWindow(object):
 		super().__init__()
 
 	def setupUi(self, MainWindow):
-		font = QtGui.QFont()
-		font.setFamily("Arial")
 
-		self.a = MainWindow
+		font = QtGui.QFont()
+		font.setFamily("Comic Sans MS")
+
 		MainWindow.setObjectName("MainWindow")
 		MainWindow.resize(291, 254)
 		MainWindow.setFont(font)
@@ -73,45 +75,35 @@ class Ui_MainWindow(object):
 
 		QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-	def game_window(self):
-
-		self.world_clean = world_generator.wgen_random_clean(self.n_mines)
-
 	def retranslateUi(self, MainWindow):
 		_translate = QtCore.QCoreApplication.translate
 		MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 		self.nMinesChooser.setToolTip(_translate("MainWindow", "<html><head/><body><p>Choose the number of mines</p></body></html>"))
-		self.nMinesLabel.setText(_translate("MainWindow", "Combien de mines ? (Monde: 40x40)"))
+		self.nMinesLabel.setText(_translate("MainWindow", "How many mines ? (Grid: 10x10)"))
 		self.button_OK.setText(_translate("MainWindow", "OK"))
-		self.menuJeux.setTitle(_translate("MainWindow", "Jeux"))
-		self.actionD_mineur.setText(_translate("MainWindow", "Démineur"))
+		self.menuJeux.setTitle(_translate("MainWindow", "Games"))
+		self.actionD_mineur.setText(_translate("MainWindow", "Minesweeper"))
 
-		self.actionabc.setText(_translate("MainWindow", "abc"))
+		self.actionabc.setText(_translate("MainWindow", "Soon"))
 
-		self.n_mines = self.get_n_mines()
+		self.button_OK.clicked.connect(lambda: self.openGridWindow())
 
-		self.button_OK.clicked.connect(MainWindow.close)
-		self.button_OK.clicked.connect(lambda: self.game_window())
+	def openGridWindow(self):
 
+		self.n_mines = self.nMinesChooser.value()
+		self.world_clean = world_generator.wgen_random_clean(self.n_mines)
 
-	def get_n_mines(self):
-		return(self.nMinesChooser.value())
-
-	def closeEvent(self, event):
-		reply = QMessageBox.question(self, 'Window Close', 'Are you sure you want to close the window?',
-				QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-
-		if reply == QMessageBox.Yes:
-			event.accept()
-			print('Window closed')
-		else:
-			event.ignore()
+		self.grid_window = QtWidgets.QMainWindow()
+		self.ui = Ui_GridWindow()
+		self.ui.setupUi(self.grid_window,h,l,self.n_mines,self.world_clean)
+		self.grid_window.show()
 
 if __name__ == "__main__":
-	import sys
+	
 	app = QtWidgets.QApplication(sys.argv)
 	w = QtWidgets.QMainWindow()
 	ui = Ui_MainWindow()
 	ui.setupUi(w)
 	w.show()
 	sys.exit(app.exec_())
+
