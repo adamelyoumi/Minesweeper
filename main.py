@@ -16,7 +16,7 @@ import os, sys
 
 h = world_generator.haut
 l = world_generator.larg
-path = world_generator.path
+path = ""
 
 class Ui_MainWindow(object):
 

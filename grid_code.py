@@ -8,7 +8,7 @@ h = world_generator.haut
 l = world_generator.larg
 
 but_sz = 20   # Button size
-path = world_generator.path
+path = ""
 n_mines = 10
 
 class Ui_GridWindow(QtWidgets.QMainWindow):
